@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{{if not .AccessToken}}
+    <p>
+        <a href="{{.LoginUrl}}">Login</a>
+    </p>
+{{else}}
+    <p>
+        <a href="{{.ProfileUrl}}">ProfileUrl</a><br/>
+        <a href="{{.LogoutUrl}}">Logout</a><br/>
+
+        <a href="/cleartoken">Clear Token</a>
+    </p>
+
+    <p>
+        Access Token:<br/>
+        <b>{{.AccessToken}}</b>
+    </p>
+{{end}}
+
+
+</body>
+</html>

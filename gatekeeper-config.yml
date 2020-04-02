@@ -1,0 +1,17 @@
+discovery-url: http://keykloak:8080/auth/realms/testrealm
+
+client-id: demo-gallery
+client-secret: 5ca6bc50-eec1-4d57-b7f7-486cc852ee99
+
+listen: :13000
+no-redirects: true
+upstream-url: http://server_gatekeeper_protected:8001
+
+enable-logging: true
+enable-json-logging: false
+verbose: true
+
+resources:
+- uri: /api/v1/info_admin
+  roles:
+   - demo-gallery:gallery_admin

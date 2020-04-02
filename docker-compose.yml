@@ -1,0 +1,50 @@
+version: "3.7"
+
+services:
+  client:
+    build:
+      context: ./client
+    image: demo_client:0.1.0
+    depends_on:
+      - keykloak
+    expose:
+      - "5556"
+    ports:
+      - "5556:5556"
+  server_gatekeeper_protected:
+    build:
+      context: ./server_gatekeeper_protected
+    image: demo_server_gatekeeper_protected:0.1.0
+    expose:
+      - "8001"
+    depends_on:
+      - gatekeeper
+  server_middleware_protected:
+    build:
+      context: ./server_middleware_protected
+    image: demo_server_middleware_protected:0.1.0
+    ports:
+      - "8000:8000"
+  keykloak:
+    image: jboss/keycloak:9.0.2
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /tmp/test-realm.json -Dkeycloak.profile.feature.upload_scripts=enabled
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: ./test-realm.json
+        target: /tmp/test-realm.json
+  gatekeeper:
+    image: keycloak/keycloak-gatekeeper:7.0.0
+    command: --config /tmp/gatekeeper-config.yml
+    ports:
+      - "13000:13000"
+    volumes:
+      - type: bind
+        source: ./gatekeeper-config.yml
+        target: /tmp/gatekeeper-config.yml
+    depends_on:
+      - keykloak
