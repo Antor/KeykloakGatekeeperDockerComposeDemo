@@ -32,7 +32,7 @@ http://demo-client.local:5556/ then click on login link and enter credentials in
 Upon successful login you will see access token shown on screen in bold font. To get access token for different user
 perform logout by clicking on Logout link.
 
-**Q**: Which users is able to login via http://demo-client.local:5556/ ?
+**Q**: Which users is able to login via http://demo-client.local:5556/ ?<br/>
 **A**: There are 2 configured users:
 
 1. Regular user can access only `api/v1/info`
@@ -44,3 +44,21 @@ perform logout by clicking on Logout link.
  
         username: test_admin
         password: test_admin
+        
+**Q**: How to export existing realm config from Keycloak with users?<br/>
+**A**: Execute next 2 commands:
+
+1. Export to file within container:
+
+        docker exec -it demo_keycloak_1 /opt/jboss/keycloak/bin/standalone.sh \
+                -Djboss.socket.binding.port-offset=100 -Dkeycloak.migration.action=export \
+                -Dkeycloak.migration.provider=singleFile \
+                -Dkeycloak.migration.realmName=testrealm \
+                -Dkeycloak.migration.usersExportStrategy=REALM_FILE \
+                -Dkeycloak.migration.file=/tmp/test_realm.json
+
+   In container `demo_keycloak_1` exports realm `testrealm` to file `/tmp/test_realm.json`
+
+2. Export from container to host machine
+
+       docker cp demo_keycloak_1:/tmp/test_realm.json ~/Downloads/test-realm.json
